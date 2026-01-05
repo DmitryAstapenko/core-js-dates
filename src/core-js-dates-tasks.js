@@ -80,8 +80,15 @@ function getDayName(date) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const result = new Date(date);
+  let diff = 5 - result.getDay();
+
+  if (diff <= 0) diff += 7;
+
+  result.setDate(result.getDate() + diff);
+
+  return result;
 }
 
 /**
@@ -95,8 +102,8 @@ function getNextFriday(/* date */) {
  * 1, 2024 => 31
  * 2, 2024 => 29
  */
-function getCountDaysInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountDaysInMonth(month, year) {
+  return new Date(year, month, 0).getDate();
 }
 
 /**
@@ -110,8 +117,12 @@ function getCountDaysInMonth(/* month, year */) {
  * '2024-02-01T00:00:00.000Z', '2024-02-02T00:00:00.000Z'  => 2
  * '2024-02-01T00:00:00.000Z', '2024-02-12T00:00:00.000Z'  => 12
  */
-function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
-  throw new Error('Not implemented');
+function getCountDaysOnPeriod(dateStart, dateEnd) {
+  const start = new Date(dateStart);
+  const end = new Date(dateEnd);
+  const ms = 24 * 60 * 60 * 1000;
+
+  return Math.floor((end - start) / ms) + 1;
 }
 
 /**
@@ -131,8 +142,12 @@ function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
  * '2024-02-02', { start: '2024-02-02', end: '2024-03-02' } => true
  * '2024-02-10', { start: '2024-02-02', end: '2024-03-02' } => true
  */
-function isDateInPeriod(/* date, period */) {
-  throw new Error('Not implemented');
+function isDateInPeriod(date, period) {
+  const localDate = new Date(date);
+  const start = new Date(period.start);
+  const end = new Date(period.end);
+
+  return localDate >= start && localDate <= end;
 }
 
 /**
@@ -146,8 +161,17 @@ function isDateInPeriod(/* date, period */) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const localDate = new Date(date);
+  const month = localDate.getUTCMonth() + 1;
+  const day = localDate.getUTCDate();
+  const year = localDate.getUTCFullYear();
+  const hours = localDate.getUTCHours();
+  const minutes = localDate.getUTCMinutes();
+  const seconds = localDate.getUTCSeconds();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+
+  return `${month}/${day}/${year}, ${hours % 12 || 12}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} ${ampm}`;
 }
 
 /**
